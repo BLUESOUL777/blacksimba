@@ -35,8 +35,8 @@ function init() {
     
     // Create scene
     scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x050505);
-    scene.fog = new THREE.FogExp2(0x050505, 0.002);
+    scene.background = new THREE.Color(0x0F0E0C);
+    scene.fog = new THREE.FogExp2(0x0F0E0C, 0.002);
 
     // Create camera
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -58,7 +58,7 @@ function init() {
     // NOTE: THREE.sRGBEncoding is deprecated, using the new property
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.2;
+    renderer.toneMappingExposure = 1.0;
 
     // Add lights
     addLights();
@@ -107,14 +107,14 @@ function addLights() {
     scene.add(mainLight);
 
     // Red rim light
-    const redLight = new THREE.PointLight(0xff0022, 3, 20);
-    redLight.position.set(-5, 2, -3);
-    scene.add(redLight);
+    const goldLight = new THREE.PointLight(0xD4AF37, 3, 20);
+    goldLight.position.set(-5, 2, -3);
+    scene.add(goldLight);
 
     // Blue rim light
-    const blueLight = new THREE.PointLight(0x00a2ff, 3, 20);
-    blueLight.position.set(5, 2, -3);
-    scene.add(blueLight);
+    const secondaryLight = new THREE.PointLight(0x8A6E2F, 3, 20);
+    secondaryLight.position.set(5, 2, -3);
+    scene.add(secondaryLight);
 
     // Add spotlight for the can
     const spotlight = new THREE.SpotLight(0xffffff, 2, 30, Math.PI / 6, 0.5, 1);
@@ -136,9 +136,9 @@ function setupPostProcessing() {
     // Add bloom pass for glow effect
     const bloomPass = new UnrealBloomPass(
         new THREE.Vector2(window.innerWidth, window.innerHeight),
-        0.8,  // strength
+        0.7,  // strength
         0.3,  // radius
-        0.9   // threshold
+        0.7   // threshold
     );
     composer.addPass(bloomPass);
     
@@ -155,7 +155,7 @@ function createEnvironment() {
     // Create a dark floor
     const floorGeometry = new THREE.PlaneGeometry(100, 100);
     const floorMaterial = new THREE.MeshStandardMaterial({
-        color: 0x0a0a0a,
+        color: 0x110F0E,
         roughness: 0.7,
         metalness: 0.2,
         side: THREE.DoubleSide
@@ -173,10 +173,10 @@ function createEnvironment() {
 function createBackgroundParticles() {
     // Create particle material
     const particleMaterial = new THREE.PointsMaterial({
-        color: 0xffffff,
+        color: 0xD4AF37,
         size: isLowPerformance ? 0.08 : 0.05,
         transparent: true,
-        opacity: 0.5,
+        opacity: 0.3,
         blending: THREE.AdditiveBlending,
         sizeAttenuation: true
     });
@@ -247,7 +247,7 @@ function createTemporaryCanModel() {
     // Add logo to the can
     const logoGeometry = new THREE.PlaneGeometry(1, 1.5);
     const logoMaterial = new THREE.MeshBasicMaterial({
-        color: 0xff0022,
+        color: 0xD4AF37,
         side: THREE.DoubleSide
     });
     
@@ -284,19 +284,19 @@ function createLogoGeometry() {
 
 function createLiquidParticles() {
     // Create materials for liquid particles
-    const redMaterial = new THREE.MeshStandardMaterial({
-        color: 0xff0022,
+    const goldMaterial = new THREE.MeshStandardMaterial({
+        color: 0xD4AF37,
         roughness: 0.1,
-        metalness: 0.3,
-        emissive: 0xff0022,
+        metalness: 0.5,
+        emissive: 0xD4AF37,
         emissiveIntensity: 0.3
     });
     
-    const blueMaterial = new THREE.MeshStandardMaterial({
-        color: 0x00a2ff,
+    const darkGoldMaterial = new THREE.MeshStandardMaterial({
+        color: 0x8A6E2F,
         roughness: 0.1,
-        metalness: 0.3,
-        emissive: 0x00a2ff,
+        metalness: 0.5,
+        emissive: 0x8A6E2F,
         emissiveIntensity: 0.3
     });
     
@@ -309,7 +309,7 @@ function createLiquidParticles() {
         const geometry = new THREE.SphereGeometry(size, isLowPerformance ? 4 : 8, isLowPerformance ? 4 : 8);
         
         // Alternate between red and blue
-        const material = i % 2 === 0 ? redMaterial : blueMaterial;
+        const material = i % 2 === 0 ? goldMaterial : darkGoldMaterial;
         const droplet = new THREE.Mesh(geometry, material);
         
         // Set initial position (will be updated in animation)
