@@ -29,14 +29,45 @@ const canvas = document.getElementById('intro-canvas');
 // Initialize the animation
 init();
 
+// Listen for theme changes
+document.addEventListener('DOMContentLoaded', () => {
+    const themeSwitch = document.getElementById('theme-switch');
+    if (themeSwitch) {
+        themeSwitch.addEventListener('change', () => {
+            updateAnimationForTheme(themeSwitch.checked);
+        });
+    }
+});
+
+// Update animation based on theme
+function updateAnimationForTheme(isLightTheme) {
+    if (!scene) return;
+    
+    // Update scene background and fog
+    const bgColor = isLightTheme ? 0xf5f5f5 : 0x0F0E0C;
+    scene.background = new THREE.Color(bgColor);
+    if (scene.fog) {
+        scene.fog = new THREE.FogExp2(bgColor, 0.002);
+    }
+    
+    // Update lighting intensity
+    scene.children.forEach(child => {
+        if (child.isAmbientLight) {
+            child.intensity = isLightTheme ? 0.7 : 0.5;
+        }
+    });
+}
+
 function init() {
     // Check device performance
     checkPerformance();
     
-    // Create scene
+    // Create scene with theme-aware background
     scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x0F0E0C);
-    scene.fog = new THREE.FogExp2(0x0F0E0C, 0.002);
+    const isLightTheme = document.body.classList.contains('light-theme');
+    const bgColor = isLightTheme ? 0xf5f5f5 : 0x0F0E0C;
+    scene.background = new THREE.Color(bgColor);
+    scene.fog = new THREE.FogExp2(bgColor, 0.002);
 
     // Create camera
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -94,26 +125,23 @@ function checkPerformance() {
 }
 
 function addLights() {
-    // Ambient light
-    const ambientLight = new THREE.AmbientLight(0x222222);
+    // Add ambient light
+    const ambientLight = new THREE.AmbientLight(0x404040, 0.5);
     scene.add(ambientLight);
 
-    // Main directional light (key light)
-    const mainLight = new THREE.DirectionalLight(0xffffff, 1.5);
-    mainLight.position.set(5, 10, 7);
-    mainLight.castShadow = true;
-    mainLight.shadow.mapSize.width = 2048;
-    mainLight.shadow.mapSize.height = 2048;
-    scene.add(mainLight);
+    // Add directional light
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+    directionalLight.position.set(1, 1, 1);
+    scene.add(directionalLight);
 
-    // Red rim light
-    const goldLight = new THREE.PointLight(0xD4AF37, 3, 20);
-    goldLight.position.set(-5, 2, -3);
-    scene.add(goldLight);
+    // Add point lights for dramatic effect
+    const orangeLight = new THREE.PointLight(0xe65b07, 3, 20);
+    orangeLight.position.set(-5, 2, -3);
+    scene.add(orangeLight);
 
-    // Blue rim light
-    const secondaryLight = new THREE.PointLight(0x8A6E2F, 3, 20);
-    secondaryLight.position.set(5, 2, -3);
+    // Add secondary light
+    const secondaryLight = new THREE.PointLight(0xb34605, 3, 20);
+    secondaryLight.position.set(5, 0, -2);
     scene.add(secondaryLight);
 
     // Add spotlight for the can
@@ -171,44 +199,29 @@ function createEnvironment() {
 }
 
 function createBackgroundParticles() {
-    // Create particle material
+    const particleCount = isLowPerformance ? 100 : 200;
+    const particleGeometry = new THREE.BufferGeometry();
+    const particlePositions = new Float32Array(particleCount * 3);
+
+    for (let i = 0; i < particleCount; i++) {
+        const i3 = i * 3;
+        particlePositions[i3] = (Math.random() - 0.5) * 20;
+        particlePositions[i3 + 1] = (Math.random() - 0.5) * 20;
+        particlePositions[i3 + 2] = (Math.random() - 0.5) * 20;
+    }
+
+    particleGeometry.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+
     const particleMaterial = new THREE.PointsMaterial({
-        color: 0xD4AF37,
-        size: isLowPerformance ? 0.08 : 0.05,
+        color: 0xe65b07,
+        size: 0.05,
         transparent: true,
         opacity: 0.3,
-        blending: THREE.AdditiveBlending,
-        sizeAttenuation: true
+        blending: THREE.AdditiveBlending
     });
 
-    // Create particle geometry
-    const particlesGeometry = new THREE.BufferGeometry();
-    const particleCount = isLowPerformance ? 500 : 1000;
-    const positionArray = new Float32Array(particleCount * 3);
-    
-    for (let i = 0; i < particleCount * 3; i += 3) {
-        // Random positions in a sphere
-        const radius = 20 + Math.random() * 30;
-        const theta = Math.random() * Math.PI * 2;
-        const phi = Math.acos(2 * Math.random() - 1);
-        
-        positionArray[i] = radius * Math.sin(phi) * Math.cos(theta);
-        positionArray[i + 1] = radius * Math.sin(phi) * Math.sin(theta);
-        positionArray[i + 2] = radius * Math.cos(phi);
-        
-        // Store particle data for animation
-        particles.push({
-            x: positionArray[i],
-            y: positionArray[i + 1],
-            z: positionArray[i + 2],
-            speed: 0.01 + Math.random() * 0.03
-        });
-    }
-    
-    particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positionArray, 3));
-    
     // Create particle system
-    const particleSystem = new THREE.Points(particlesGeometry, particleMaterial);
+    const particleSystem = new THREE.Points(particleGeometry, particleMaterial);
     scene.add(particleSystem);
 }
 
@@ -230,15 +243,15 @@ function loadAssets() {
 }
 
 function createTemporaryCanModel() {
-    // Create a simple can shape
-    const canGeometry = new THREE.CylinderGeometry(0.5, 0.5, 2, 32);
-    const canMaterial = new THREE.MeshStandardMaterial({
-        color: 0x111111,
-        roughness: 0.2,
-        metalness: 0.8
+    // Create a simple cylinder as a placeholder for the can
+    const geometry = new THREE.CylinderGeometry(0.8, 0.8, 2.5, 32);
+    const material = new THREE.MeshStandardMaterial({
+        color: 0xe65b07,
+        metalness: 0.8,
+        roughness: 0.2
     });
     
-    canModel = new THREE.Mesh(canGeometry, canMaterial);
+    canModel = new THREE.Mesh(geometry, material);
     canModel.castShadow = true;
     canModel.receiveShadow = true;
     canModel.position.y = -10; // Start below the view
@@ -247,7 +260,7 @@ function createTemporaryCanModel() {
     // Add logo to the can
     const logoGeometry = new THREE.PlaneGeometry(1, 1.5);
     const logoMaterial = new THREE.MeshBasicMaterial({
-        color: 0xD4AF37,
+        color: 0xe65b07,
         side: THREE.DoubleSide
     });
     
@@ -283,21 +296,25 @@ function createLogoGeometry() {
 }
 
 function createLiquidParticles() {
-    // Create materials for liquid particles
-    const goldMaterial = new THREE.MeshStandardMaterial({
-        color: 0xD4AF37,
-        roughness: 0.1,
-        metalness: 0.5,
-        emissive: 0xD4AF37,
-        emissiveIntensity: 0.3
+    // Create materials for the liquid particles
+    const orangeMaterial = new THREE.MeshStandardMaterial({
+        color: 0xe65b07,
+        metalness: 0.6,
+        roughness: 0.2,
+        transparent: true,
+        opacity: 0.8,
+        emissive: 0xe65b07,
+        emissiveIntensity: 0.2
     });
     
-    const darkGoldMaterial = new THREE.MeshStandardMaterial({
-        color: 0x8A6E2F,
-        roughness: 0.1,
-        metalness: 0.5,
-        emissive: 0x8A6E2F,
-        emissiveIntensity: 0.3
+    const darkOrangeMaterial = new THREE.MeshStandardMaterial({
+        color: 0xb34605,
+        metalness: 0.6,
+        roughness: 0.3,
+        transparent: true,
+        opacity: 0.8,
+        emissive: 0xb34605,
+        emissiveIntensity: 0.1
     });
     
     // Create liquid droplets
@@ -308,8 +325,8 @@ function createLiquidParticles() {
         const size = 0.05 + Math.random() * 0.15;
         const geometry = new THREE.SphereGeometry(size, isLowPerformance ? 4 : 8, isLowPerformance ? 4 : 8);
         
-        // Alternate between red and blue
-        const material = i % 2 === 0 ? goldMaterial : darkGoldMaterial;
+        // Alternate between the two materials for variety
+        const material = i % 2 === 0 ? orangeMaterial : darkOrangeMaterial;
         const droplet = new THREE.Mesh(geometry, material);
         
         // Set initial position (will be updated in animation)

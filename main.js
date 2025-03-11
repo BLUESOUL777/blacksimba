@@ -25,6 +25,20 @@ let loadingComplete = false;
 
 // Initialize the website
 document.addEventListener('DOMContentLoaded', () => {
+    // DOM elements
+    const loaderContainer = document.querySelector('.loader-container');
+    const progressBar = document.querySelector('.progress');
+    const introContainer = document.getElementById('intro-container');
+    const mainContent = document.querySelector('.main-content');
+    const enterBtn = document.querySelector('.enter-btn');
+    const navLinks = document.querySelectorAll('.nav-link');
+    const sections = document.querySelectorAll('.section');
+    const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+    const contactForm = document.getElementById('contactForm');
+    
+    // Initialize theme toggle first to ensure proper theme is applied before animations
+    setupThemeToggle();
+    
     // Start the loading sequence
     startLoading();
     
@@ -397,6 +411,44 @@ window.addEventListener('popstate', (e) => {
         setActiveSection('hero');
     }
 });
+
+// Theme toggle functionality
+function setupThemeToggle() {
+    const themeSwitch = document.getElementById('theme-switch');
+    const body = document.body;
+    
+    // Apply saved theme preference
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light') {
+        body.classList.add('light-theme');
+        themeSwitch.checked = true;
+        updateThemeColors(true);
+    }
+    
+    // Toggle theme when switch is clicked
+    themeSwitch.addEventListener('change', function() {
+        if (this.checked) {
+            body.classList.add('light-theme');
+            localStorage.setItem('theme', 'light');
+        } else {
+            body.classList.remove('light-theme');
+            localStorage.setItem('theme', 'dark');
+        }
+        updateThemeColors(this.checked);
+    });
+}
+
+// Update colors in 3D scenes based on theme
+function updateThemeColors(isLightTheme) {
+    // Update scene background color if animation.js is loaded
+    if (typeof scene !== 'undefined') {
+        const bgColor = isLightTheme ? 0xf5f5f5 : 0x0F0E0C;
+        scene.background = new THREE.Color(bgColor);
+        if (scene.fog) {
+            scene.fog = new THREE.FogExp2(bgColor, 0.002);
+        }
+    }
+}
 
 // Export functions that might be needed by other scripts
 export { updateProgressBar, onLoadingComplete };
