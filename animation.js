@@ -1,4 +1,3 @@
-// Animation script for Black Simba Energy Drink website
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
@@ -14,11 +13,7 @@ let mixer, particles = [], canModel, liquidParticles = [], logoGeometry;
 let isLowPerformance = false;
 let frameCount = 0, lastTime = 0, fps = 0;
 const canvas = document.getElementById('intro-canvas');
-
-// Initialize the animation
 init();
-
-// Listen for theme changes
 document.addEventListener('DOMContentLoaded', () => {
     const themeSwitch = document.getElementById('theme-switch');
     if (themeSwitch) {
@@ -27,19 +22,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
-
-// Update animation based on theme
 function updateAnimationForTheme(isLightTheme) {
     if (!scene) return;
-    
-    // Update scene background and fog
     const bgColor = isLightTheme ? 0xf5f5f5 : 0x0F0E0C;
     scene.background = new THREE.Color(bgColor);
     if (scene.fog) {
         scene.fog = new THREE.FogExp2(bgColor, 0.002);
     }
-    
-    // Update lighting intensity
     scene.children.forEach(child => {
         if (child.isAmbientLight) {
             child.intensity = isLightTheme ? 0.7 : 0.5;
@@ -48,22 +37,16 @@ function updateAnimationForTheme(isLightTheme) {
 }
 
 function init() {
-    // Check device performance
     checkPerformance();
-    
-    // Create scene with theme-aware background
     scene = new THREE.Scene();
     const isLightTheme = document.body.classList.contains('light-theme');
     const bgColor = isLightTheme ? 0xf5f5f5 : 0x0F0E0C;
     scene.background = new THREE.Color(bgColor);
     scene.fog = new THREE.FogExp2(bgColor, 0.002);
-
-    // Create camera
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     camera.position.set(0, 0, 5);
     camera.lookAt(0, 0, 0);
 
-    // Create renderer
     renderer = new THREE.WebGLRenderer({
         canvas: canvas,
         antialias: !isLowPerformance,
@@ -74,32 +57,19 @@ function init() {
     renderer.setPixelRatio(isLowPerformance ? 1 : window.devicePixelRatio);
     renderer.shadowMap.enabled = !isLowPerformance;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    
-    // NOTE: THREE.sRGBEncoding is deprecated, using the new property
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.0;
 
-    // Add lights
     addLights();
 
-    // Setup post-processing
     setupPostProcessing();
 
-    // Create environment
     createEnvironment();
-
-    // Load models and textures
     loadAssets();
-
-    // Handle window resize
     window.addEventListener('resize', onWindowResize);
-
-    // Start animation loop
     animate();
 }
-
-// Check device performance to adjust settings
 function checkPerformance() {
     // Simple performance detection based on device pixel ratio and platform
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);

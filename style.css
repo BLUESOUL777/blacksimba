@@ -1358,4 +1358,190 @@ footer::before {
         top: 15px;
         right: 70px;
     }
+}
+
+/* Notification */
+.notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: var(--card-bg);
+    padding: 15px 25px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: var(--card-shadow);
+    border: 1px solid var(--border-color);
+    transform: translateY(100px);
+    opacity: 0;
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.notification.show {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.notification i {
+    color: var(--primary-color);
+    font-size: 1.2rem;
+}
+
+.notification p {
+    margin: 0;
+    color: var(--text-color);
+}
+
+/* Modal */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1000;
+}
+
+.modal.show {
+    opacity: 1;
+}
+
+.modal.fade-out {
+    opacity: 0;
+}
+
+.modal-content {
+    background: var(--card-bg);
+    padding: 30px;
+    border-radius: 10px;
+    max-width: 600px;
+    width: 90%;
+    position: relative;
+    transform: translateY(50px);
+    transition: transform 0.3s ease;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--card-shadow);
+}
+
+.modal.show .modal-content {
+    transform: translateY(0);
+}
+
+.close-modal {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: color 0.3s ease;
+}
+
+.close-modal:hover {
+    color: var(--primary-color);
+}
+
+.modal h2 {
+    margin-bottom: 15px;
+    color: var(--primary-color);
+}
+
+.modal p {
+    margin-bottom: 20px;
+    color: var(--text-muted);
+}
+
+.product-details {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 20px;
+    align-items: start;
+}
+
+.nutrition-info {
+    background: var(--darker-bg);
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.nutrition-info h3 {
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+    color: var(--text-color);
+}
+
+.nutrition-info ul {
+    list-style: none;
+    padding: 0;
+}
+
+.nutrition-info li {
+    color: var(--text-muted);
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+}
+
+/* Cart Badge */
+.cart-count {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: var(--primary-color);
+    color: var(--dark-bg);
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .product-details {
+        grid-template-columns: 1fr;
+    }
+    
+    .notification {
+        left: 20px;
+        right: 20px;
+        text-align: center;
+        justify-content: center;
+    }
+}
+
+/* Cart Icon */
+.cart-icon {
+    position: relative;
+    margin-right: 20px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.cart-icon i {
+    font-size: 1.2rem;
+    color: var(--text-color);
+}
+
+.cart-icon:hover i {
+    color: var(--primary-color);
+}
+
+@media (max-width: 768px) {
+    .cart-icon {
+        position: absolute;
+        top: 15px;
+        right: 120px;
+    }
 } 

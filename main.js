@@ -23,6 +23,12 @@ const totalItems = assetsToLoad.length || 10;
 let isLoaded = false;
 let loadingComplete = false;
 
+// Cart state
+let cart = {
+    items: [],
+    total: 0
+};
+
 // Initialize the website
 document.addEventListener('DOMContentLoaded', () => {
     // Initialize theme toggle first to ensure proper theme is applied before animations
@@ -157,6 +163,12 @@ function setupEventListeners() {
     
     // Add scroll animations
     window.addEventListener('scroll', debounce(handleScroll, 50));
+    
+    // Add store button listeners
+    setupStoreButtons();
+    
+    // Add product detail button listeners
+    setupProductButtons();
 }
 
 // Enter site event handler
@@ -437,6 +449,138 @@ function updateThemeColors(isLightTheme) {
             scene.fog = new THREE.FogExp2(bgColor, 0.002);
         }
     }
+}
+
+// Setup store buttons
+function setupStoreButtons() {
+    const storeButtons = document.querySelectorAll('.store-card .btn');
+    storeButtons.forEach(button => {
+        button.addEventListener('click', handleStoreButtonClick);
+    });
+}
+
+// Setup product buttons
+function setupProductButtons() {
+    const productButtons = document.querySelectorAll('.product-card .btn');
+    productButtons.forEach(button => {
+        button.addEventListener('click', handleProductButtonClick);
+    });
+}
+
+// Handle store button clicks
+function handleStoreButtonClick(e) {
+    e.preventDefault();
+    const card = e.target.closest('.store-card');
+    const product = {
+        name: card.querySelector('h3').textContent,
+        price: parseFloat(card.querySelector('p').textContent.replace('$', ''))
+    };
+    
+    // Add to cart
+    addToCart(product);
+    
+    // Show success message
+    showNotification(`Added ${product.name} to cart!`);
+}
+
+// Handle product button clicks
+function handleProductButtonClick(e) {
+    e.preventDefault();
+    const card = e.target.closest('.product-card');
+    const product = {
+        name: card.querySelector('h3').textContent,
+        description: card.querySelector('p').textContent
+    };
+    
+    // Show product details modal
+    showProductModal(product);
+}
+
+// Add item to cart
+function addToCart(product) {
+    cart.items.push(product);
+    cart.total += product.price;
+    
+    // Update cart UI if it exists
+    updateCartUI();
+}
+
+// Update cart UI
+function updateCartUI() {
+    const cartCount = document.querySelector('.cart-count');
+    if (cartCount) {
+        cartCount.textContent = cart.items.length;
+    }
+}
+
+// Show notification
+function showNotification(message) {
+    const notification = document.createElement('div');
+    notification.className = 'notification';
+    notification.innerHTML = `
+        <i class="fas fa-check-circle"></i>
+        <p>${message}</p>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Fade in
+    setTimeout(() => notification.classList.add('show'), 100);
+    
+    // Remove after 3 seconds
+    setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
+}
+
+// Show product modal
+function showProductModal(product) {
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    modal.innerHTML = `
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>${product.name}</h2>
+            <p>${product.description}</p>
+            <div class="product-details">
+                <div class="nutrition-info">
+                    <h3>Nutrition Facts</h3>
+                    <ul>
+                        <li>Energy: 160 cal</li>
+                        <li>Caffeine: 180mg</li>
+                        <li>Taurine: 1000mg</li>
+                        <li>B-Vitamins: B3, B6, B12</li>
+                    </ul>
+                </div>
+                <button class="btn primary-btn">ADD TO CART - $3.99</button>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Add event listeners
+    const closeBtn = modal.querySelector('.close-modal');
+    const addToCartBtn = modal.querySelector('.primary-btn');
+    
+    closeBtn.addEventListener('click', () => {
+        modal.classList.add('fade-out');
+        setTimeout(() => modal.remove(), 300);
+    });
+    
+    addToCartBtn.addEventListener('click', () => {
+        addToCart({
+            name: product.name,
+            price: 3.99
+        });
+        showNotification(`Added ${product.name} to cart!`);
+        modal.classList.add('fade-out');
+        setTimeout(() => modal.remove(), 300);
+    });
+    
+    // Show modal with animation
+    setTimeout(() => modal.classList.add('show'), 100);
 }
 
 // Export functions that might be needed by other scripts
