@@ -8,22 +8,11 @@ import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
 import { FXAAShader } from 'three/addons/shaders/FXAAShader.js';
 import { onLoadingComplete } from './main.js';
 
-// Scene setup
 let scene, camera, renderer, composer;
 let clock = new THREE.Clock();
-let mixer;
-let particles = [];
-let canModel;
-let liquidParticles = [];
-let logoGeometry;
+let mixer, particles = [], canModel, liquidParticles = [], logoGeometry;
 let isLowPerformance = false;
-
-// Performance monitoring
-let frameCount = 0;
-let lastTime = 0;
-let fps = 0;
-
-// Canvas element
+let frameCount = 0, lastTime = 0, fps = 0;
 const canvas = document.getElementById('intro-canvas');
 
 // Initialize the animation

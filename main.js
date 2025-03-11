@@ -8,7 +8,7 @@ const sections = document.querySelectorAll('.section');
 const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
 const contactForm = document.getElementById('contactForm');
 
-// Assets to preload - these will be actual paths in a production environment
+// Assets to preload
 const assetsToLoad = [
     { type: 'image', path: '/img/logo.png' },
     { type: 'image', path: '/img/background.jpg' },
@@ -19,23 +19,12 @@ const assetsToLoad = [
 
 // Loading variables
 let loadedItems = 0;
-const totalItems = assetsToLoad.length || 10; // Fallback to 10 if no assets defined
+const totalItems = assetsToLoad.length || 10;
 let isLoaded = false;
 let loadingComplete = false;
 
 // Initialize the website
 document.addEventListener('DOMContentLoaded', () => {
-    // DOM elements
-    const loaderContainer = document.querySelector('.loader-container');
-    const progressBar = document.querySelector('.progress');
-    const introContainer = document.getElementById('intro-container');
-    const mainContent = document.querySelector('.main-content');
-    const enterBtn = document.querySelector('.enter-btn');
-    const navLinks = document.querySelectorAll('.nav-link');
-    const sections = document.querySelectorAll('.section');
-    const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
-    const contactForm = document.getElementById('contactForm');
-    
     // Initialize theme toggle first to ensure proper theme is applied before animations
     setupThemeToggle();
     

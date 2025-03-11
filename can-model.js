@@ -34,8 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const themeSwitch = document.getElementById('theme-switch');
     if (themeSwitch) {
         themeSwitch.addEventListener('change', function() {
-            const isLightTheme = this.checked;
-            updateSceneForTheme(isLightTheme);
+            updateSceneForTheme(this.checked);
         });
     }
 });
