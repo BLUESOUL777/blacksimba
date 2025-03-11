@@ -1,6 +1,3 @@
-// Main JavaScript file for Black Simba Energy Drink website
-
-// DOM Elements
 const loaderContainer = document.querySelector('.loader-container');
 const progressBar = document.querySelector('.progress');
 const introContainer = document.getElementById('intro-container');

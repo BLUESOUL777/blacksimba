@@ -87,8 +87,6 @@ button {
 .slide-down {
     animation: slideDown 0.8s ease forwards;
 }
-
-/* Button styles */
 .btn {
     display: inline-block;
     padding: 12px 30px;
@@ -139,7 +137,6 @@ button {
     background-color: #E3BE48;
 }
 
-/* Section styles */
 .section {
     padding: var(--section-padding);
     min-height: 100vh;
@@ -171,8 +168,6 @@ button {
     height: 3px;
     background: var(--primary-color);
 }
-
-/* Loader styles */
 .loader-container {
     position: fixed;
     top: 0;
@@ -214,8 +209,6 @@ button {
     background: var(--primary-color);
     transition: width var(--transition-speed) ease;
 }
-
-/* Intro animation styles */
 .intro-animation {
     position: fixed;
     top: 0;
@@ -443,8 +436,6 @@ nav ul.active li a {
     opacity: 1;
     transform: translateY(0);
 }
-
-/* Hero section styles */
 #hero {
     height: 100vh;
     display: flex;
@@ -489,8 +480,6 @@ nav ul.active li a {
     justify-content: center;
     margin-top: 30px;
 }
-
-/* Products section styles */
 .product-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -543,8 +532,6 @@ nav ul.active li a {
     margin-bottom: 20px;
     color: var(--text-dimmed);
 }
-
-/* About section styles */
 .about-content {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -587,8 +574,6 @@ nav ul.active li a {
 .about-image:hover img {
     transform: scale(1.05);
 }
-
-/* Energy section styles */
 .energy-content {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -1162,5 +1147,60 @@ footer::before {
     
     .loader-text {
         font-size: 18px;
+    }
+}
+
+/* 3D Can Model Styles */
+.can-model-container {
+    position: relative;
+    width: 100%;
+    height: 500px;
+    margin: 2rem auto;
+    overflow: hidden;
+    border-radius: 8px;
+    background-color: transparent;
+}
+
+.model-loader {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(17, 15, 14, 0.8);
+    z-index: 10;
+    color: #D4AF37;
+    font-family: var(--font-primary);
+    font-weight: 600;
+}
+
+.loader-spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid rgba(212, 175, 55, 0.3);
+    border-radius: 50%;
+    border-top-color: #D4AF37;
+    animation: spin 1s ease-in-out infinite;
+    margin-bottom: 1rem;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Responsive adjustments for 3D model */
+@media (max-width: 768px) {
+    .can-model-container {
+        height: 400px;
+    }
+}
+
+@media (max-width: 480px) {
+    .can-model-container {
+        height: 300px;
     }
 } 

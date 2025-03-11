@@ -13,7 +13,9 @@
         {
             "imports": {
                 "three": "https://unpkg.com/three@0.159.0/build/three.module.js",
-                "three/addons/": "https://unpkg.com/three@0.159.0/examples/jsm/"
+                "three/addons/": "https://unpkg.com/three@0.159.0/examples/jsm/",
+                "gsap": "https://unpkg.com/gsap@3.12.2/dist/gsap.min.js",
+                "gsap/ScrollTrigger": "https://unpkg.com/gsap@3.12.2/dist/ScrollTrigger.min.js"
             }
         }
     </script>
@@ -71,6 +73,12 @@
                     <a href="#products" class="btn primary-btn slide-up">EXPLORE PRODUCTS</a>
                     <a href="#store" class="btn secondary-btn slide-up">SHOP NOW</a>
                 </div>
+            </div>
+        </section>
+
+        <section id="can-model-section" class="section">
+            <div class="container">
+                <div id="can-container" class="can-model-container"></div>
             </div>
         </section>
 
@@ -287,5 +295,6 @@
 
     <script type="module" src="main.js"></script>
     <script type="module" src="animation.js"></script>
+    <script type="module" src="can-model.js"></script>
 </body>
 </html>
