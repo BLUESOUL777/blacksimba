@@ -174,27 +174,44 @@ function loadAssets() {
 
 function createTemporaryCanModel() {
     const geometry = new THREE.CylinderGeometry(0.8, 0.8, 2.5, 32);
+    
+    // Create a texture loader
+    const textureLoader = new THREE.TextureLoader();
+    
+    // Load the can texture image
+    const canTexture = textureLoader.load('img/WhatsApp Image 2025-03-11 at 11.24.46 AM.jpeg');
+    
+    // Improve texture wrapping
+    canTexture.wrapS = THREE.RepeatWrapping;
+    canTexture.repeat.set(1, 1);
+    
+    // Create material with the texture
     const material = new THREE.MeshStandardMaterial({
-
-        
+        map: canTexture,
+        metalness: 0.7,
+        roughness: 0.2
     });
     
     canModel = new THREE.Mesh(geometry, material);
     canModel.castShadow = true;
     canModel.receiveShadow = true;
     canModel.position.y = -10; 
+    
+    // Adjust UV mapping for better texture alignment
+    const uvAttribute = geometry.attributes.uv;
+    for (let i = 0; i < uvAttribute.count; i++) {
+        const u = uvAttribute.getX(i);
+        const v = uvAttribute.getY(i);
+        
+        // Adjust the U coordinate to center the texture on the front of the can
+        uvAttribute.setX(i, (u + 0.25) % 1);
+    }
+    uvAttribute.needsUpdate = true;
+    
     scene.add(canModel);
 
-    const logoGeometry = new THREE.PlaneGeometry(1, 1.5);
-    const logoMaterial = new THREE.MeshBasicMaterial({
-        color: 0xe65b07,
-        side: THREE.DoubleSide
-    });
-    
-    const logo = new THREE.Mesh(logoGeometry, logoMaterial);
-    logo.position.z = 0.51;
-    logo.rotation.y = Math.PI;
-    canModel.add(logo);
+    // We don't need the separate logo mesh anymore since it's part of the texture
+    // If you want to keep additional details, you can add them here
 }
 
 function createLogoGeometry() {

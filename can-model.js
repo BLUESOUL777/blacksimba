@@ -98,13 +98,35 @@ function createCanModel() {
     // Create a group to hold all can parts
     canModel = new THREE.Group();
     
+    // Create a texture loader
+    const textureLoader = new THREE.TextureLoader();
+    
+    // Load the can texture image
+    const canTexture = textureLoader.load('img/WhatsApp Image 2025-03-11 at 11.24.46 AM.jpeg');
+    
+    // Improve texture wrapping
+    canTexture.wrapS = THREE.RepeatWrapping;
+    canTexture.repeat.set(1, 1);
+    
     // Create the main can body
     const bodyGeometry = new THREE.CylinderGeometry(0.8, 0.8, 2.5, 32);
     const bodyMaterial = new THREE.MeshStandardMaterial({
-        color: 0x110F0E, // Very dark gray/black
-        metalness: 0.9,
-        roughness: 0.1
+        map: canTexture,
+        metalness: 0.7,
+        roughness: 0.2
     });
+    
+    // Adjust UV mapping for better texture alignment
+    const uvAttribute = bodyGeometry.attributes.uv;
+    for (let i = 0; i < uvAttribute.count; i++) {
+        const u = uvAttribute.getX(i);
+        const v = uvAttribute.getY(i);
+        
+        // Adjust the U coordinate to center the texture on the front of the can
+        uvAttribute.setX(i, (u + 0.25) % 1);
+    }
+    uvAttribute.needsUpdate = true;
+    
     const canBody = new THREE.Mesh(bodyGeometry, bodyMaterial);
     canModel.add(canBody);
     
@@ -129,19 +151,6 @@ function createCanModel() {
     const pullTab = new THREE.Mesh(tabGeometry, tabMaterial);
     pullTab.position.set(0, 1.3, 0.4);
     canModel.add(pullTab);
-    
-    // Create a simple logo (just a plane with texture)
-    const logoGeometry = new THREE.PlaneGeometry(1.5, 1);
-    const logoMaterial = new THREE.MeshStandardMaterial({
-        color: 0xe65b07, // Orange-red color
-        metalness: 0.8,
-        roughness: 0.2,
-        side: THREE.DoubleSide
-    });
-    const logo = new THREE.Mesh(logoGeometry, logoMaterial);
-    logo.position.set(0, 0, 0.85);
-    logo.rotation.y = Math.PI;
-    canModel.add(logo);
     
     // Add condensation droplets
     addCondensationEffect(canModel);
