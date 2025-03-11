@@ -29,11 +29,41 @@ function updateAnimationForTheme(isLightTheme) {
     if (scene.fog) {
         scene.fog = new THREE.FogExp2(bgColor, 0.002);
     }
+    
+    // Update lighting based on theme
     scene.children.forEach(child => {
         if (child.isAmbientLight) {
-            child.intensity = isLightTheme ? 0.7 : 0.5;
+            child.intensity = isLightTheme ? 0.8 : 0.7;
+        }
+        if (child.isDirectionalLight) {
+            child.intensity = isLightTheme ? 1.8 : 2.0;
+        }
+        if (child.isPointLight) {
+            child.intensity = isLightTheme ? 1.2 : 1.5;
         }
     });
+    
+    // Update post-processing for theme
+    if (composer) {
+        composer.passes.forEach(pass => {
+            // Adjust bloom settings
+            if (pass instanceof UnrealBloomPass) {
+                pass.strength = isLightTheme ? 0.8 : 1.0;
+                pass.radius = isLightTheme ? 0.3 : 0.4;
+            }
+            
+            // Adjust brightness/contrast shader
+            if (pass.uniforms && pass.uniforms.brightness) {
+                pass.uniforms.brightness.value = isLightTheme ? 0.1 : 0.15;
+                pass.uniforms.contrast.value = isLightTheme ? 1.1 : 1.2;
+            }
+        });
+    }
+    
+    // Update renderer settings
+    if (renderer) {
+        renderer.toneMappingExposure = isLightTheme ? 1.2 : 1.5;
+    }
 }
 
 function init() {
@@ -51,15 +81,23 @@ function init() {
         canvas: canvas,
         antialias: !isLowPerformance,
         alpha: true,
-        powerPreference: 'high-performance'
+        powerPreference: 'high-performance',
+        precision: 'highp'
     });
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(isLowPerformance ? 1 : window.devicePixelRatio);
+    renderer.setPixelRatio(isLowPerformance ? 1 : Math.min(window.devicePixelRatio, 2));
     renderer.shadowMap.enabled = !isLowPerformance;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.0;
+    renderer.toneMappingExposure = 1.2;
+    
+    // Load environment map for reflections
+    const envMapLoader = new THREE.TextureLoader();
+    const envMap = envMapLoader.load('textures/studio_hdri.hdr', function(texture) {
+        texture.mapping = THREE.EquirectangularReflectionMapping;
+        scene.environment = texture;
+    });
 
     addLights();
 
@@ -105,18 +143,62 @@ function setupPostProcessing() {
     
     const renderPass = new RenderPass(scene, camera);
     composer.addPass(renderPass);
+    
+    // Enhanced bloom settings for more brightness
     const bloomPass = new UnrealBloomPass(
         new THREE.Vector2(window.innerWidth, window.innerHeight),
-        0.7,          0.3,  
-        0.7   
+        1.0,          // Increased bloom strength
+        0.4,          // Increased radius
+        0.85          // Increased threshold
     );
     composer.addPass(bloomPass);
+    
+    // Add a custom shader pass for brightness and contrast enhancement
+    const brightnessContrastShader = {
+        uniforms: {
+            "tDiffuse": { value: null },
+            "brightness": { value: 0.15 },  // Brightness adjustment
+            "contrast": { value: 1.2 }      // Contrast adjustment
+        },
+        vertexShader: `
+            varying vec2 vUv;
+            void main() {
+                vUv = uv;
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            }
+        `,
+        fragmentShader: `
+            uniform sampler2D tDiffuse;
+            uniform float brightness;
+            uniform float contrast;
+            varying vec2 vUv;
+            
+            void main() {
+                vec4 color = texture2D(tDiffuse, vUv);
+                
+                // Apply brightness
+                color.rgb += brightness;
+                
+                // Apply contrast
+                color.rgb = (color.rgb - 0.5) * contrast + 0.5;
+                
+                gl_FragColor = color;
+            }
+        `
+    };
+    
+    const brightnessContrastPass = new ShaderPass(brightnessContrastShader);
+    composer.addPass(brightnessContrastPass);
+    
     const fxaaPass = new ShaderPass(FXAAShader);
     fxaaPass.material.uniforms['resolution'].value.set(
         1 / (window.innerWidth * renderer.getPixelRatio()),
         1 / (window.innerHeight * renderer.getPixelRatio())
     );
     composer.addPass(fxaaPass);
+    
+    // Increase renderer exposure for overall brightness
+    renderer.toneMappingExposure = 1.5;
 }
 
 function createEnvironment() {
@@ -173,25 +255,70 @@ function loadAssets() {
 }
 
 function createTemporaryCanModel() {
-    const geometry = new THREE.CylinderGeometry(0.8, 0.8, 2.5, 32);
+    // Create a higher-definition cylinder with more segments for smoother appearance
+    const geometry = new THREE.CylinderGeometry(0.8, 0.8, 2.5, 64, 32, true);
     
     // Create a texture loader
     const textureLoader = new THREE.TextureLoader();
     
-    // Load the can texture image
-    const canTexture = textureLoader.load('img/WhatsApp Image 2025-03-11 at 11.24.46 AM.jpeg');
+    // Load the can texture image with enhanced settings
+    const canTexture = textureLoader.load('img/WhatsApp Image 2025-03-11 at 11.24.46 AM.jpeg', function(texture) {
+        // Enhance texture settings
+        texture.colorSpace = THREE.SRGBColorSpace;
+        texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
+        texture.minFilter = THREE.LinearMipmapLinearFilter;
+        texture.magFilter = THREE.LinearFilter;
+    });
+    
+    // Create a normal map from the texture for added detail
+    const normalMap = textureLoader.load('img/WhatsApp Image 2025-03-11 at 11.24.46 AM.jpeg', function(texture) {
+        // Convert the texture to a normal map effect
+        const canvas = document.createElement('canvas');
+        const width = texture.image.width;
+        const height = texture.image.height;
+        canvas.width = width;
+        canvas.height = height;
+        const context = canvas.getContext('2d');
+        context.drawImage(texture.image, 0, 0);
+        
+        // Simple normal map generation
+        const imgData = context.getImageData(0, 0, width, height);
+        const normalData = context.createImageData(width, height);
+        
+        for (let i = 0; i < imgData.data.length; i += 4) {
+            // Create a simple emboss effect for the normal map
+            normalData.data[i] = 128; // R
+            normalData.data[i+1] = 128; // G
+            normalData.data[i+2] = 255; // B - pointing outward
+            normalData.data[i+3] = imgData.data[i+3]; // Alpha
+        }
+        
+        context.putImageData(normalData, 0, 0);
+        texture.image = canvas;
+        texture.needsUpdate = true;
+    });
     
     // Improve texture wrapping
     canTexture.wrapS = THREE.RepeatWrapping;
     canTexture.repeat.set(1, 1);
     
-    // Create material with the texture
-    const material = new THREE.MeshStandardMaterial({
+    // Create material with enhanced properties for better definition
+    const material = new THREE.MeshPhysicalMaterial({
         map: canTexture,
-        metalness: 0.7,
-        roughness: 0.2
+        normalMap: normalMap,
+        normalScale: new THREE.Vector2(0.15, 0.15),
+        metalness: 0.6,
+        roughness: 0.2,
+        clearcoat: 0.5,
+        clearcoatRoughness: 0.3,
+        reflectivity: 0.5,
+        envMapIntensity: 1.0,
+        emissive: 0x333333,
+        emissiveMap: canTexture,
+        emissiveIntensity: 0.2,
     });
     
+    // Create the main can body
     canModel = new THREE.Mesh(geometry, material);
     canModel.castShadow = true;
     canModel.receiveShadow = true;
@@ -208,10 +335,54 @@ function createTemporaryCanModel() {
     }
     uvAttribute.needsUpdate = true;
     
+    // Add top and bottom caps for a more realistic can
+    const topGeometry = new THREE.CircleGeometry(0.8, 32);
+    const bottomGeometry = new THREE.CircleGeometry(0.8, 32);
+    
+    const topMaterial = new THREE.MeshStandardMaterial({
+        color: 0x888888,
+        metalness: 0.9,
+        roughness: 0.1,
+    });
+    
+    const bottomMaterial = new THREE.MeshStandardMaterial({
+        color: 0x888888,
+        metalness: 0.9,
+        roughness: 0.1,
+    });
+    
+    const topCap = new THREE.Mesh(topGeometry, topMaterial);
+    topCap.position.y = 1.25;
+    topCap.rotation.x = -Math.PI / 2;
+    canModel.add(topCap);
+    
+    const bottomCap = new THREE.Mesh(bottomGeometry, bottomMaterial);
+    bottomCap.position.y = -1.25;
+    bottomCap.rotation.x = Math.PI / 2;
+    canModel.add(bottomCap);
+    
+    // Add a pull tab on top
+    const tabGeometry = new THREE.BoxGeometry(0.3, 0.05, 0.2);
+    const tabMaterial = new THREE.MeshStandardMaterial({
+        color: 0xCCCCCC,
+        metalness: 1.0,
+        roughness: 0.2
+    });
+    const pullTab = new THREE.Mesh(tabGeometry, tabMaterial);
+    pullTab.position.set(0, 1.3, 0.4);
+    canModel.add(pullTab);
+    
     scene.add(canModel);
 
-    // We don't need the separate logo mesh anymore since it's part of the texture
-    // If you want to keep additional details, you can add them here
+    // Add a point light near the can to highlight it
+    const canHighlight = new THREE.PointLight(0xffffff, 1.5, 10);
+    canHighlight.position.set(2, 0, 2);
+    scene.add(canHighlight);
+    
+    // Add a subtle rim light to enhance edges
+    const rimLight = new THREE.PointLight(0xffffff, 1.0, 8);
+    rimLight.position.set(-2, 0, -2);
+    scene.add(rimLight);
 }
 
 function createLogoGeometry() {
