@@ -547,13 +547,13 @@ function showProductModal(product) {
                 <div class="nutrition-info">
                     <h3>Nutrition Facts</h3>
                     <ul>
-                        <li>Energy: 160 cal</li>
-                        <li>Caffeine: 180mg</li>
-                        <li>Taurine: 1000mg</li>
+                        <li>Energy: 50 kcal</li>
+                        <li>Caffeine: 30mg</li>
+                        <li>Taurine: 400mg</li>
                         <li>B-Vitamins: B3, B6, B12</li>
                     </ul>
                 </div>
-                <button class="btn primary-btn">ADD TO CART - $3.99</button>
+                <button class="btn primary-btn">ADD TO CART - &#8377;80</button>
             </div>
         </div>
     `;
