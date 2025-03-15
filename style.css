@@ -1548,3 +1548,8 @@ footer::before {
         right: 120px;
     }
 } 
+
+.limit-content{
+  max-height: 1500px;
+  overflow: hidden;
+}
