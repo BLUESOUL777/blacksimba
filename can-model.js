@@ -30,13 +30,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize 3D scene
     init();
     
-    // Add theme change listener
-    const themeSwitch = document.getElementById('theme-switch');
-    if (themeSwitch) {
-        themeSwitch.addEventListener('change', function() {
-            updateSceneForTheme(this.checked);
-        });
-    }
+    // Add theme change listener - use custom event from main.js
+    document.addEventListener('themeChanged', (event) => {
+        updateSceneForTheme(event.detail.isLightTheme);
+    });
+    
+    // Check initial theme
+    const body = document.body;
+    const isLightTheme = body.classList.contains('light-theme');
+    updateSceneForTheme(isLightTheme);
 });
 
 // Initialize the scene

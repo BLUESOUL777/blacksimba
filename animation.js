@@ -15,12 +15,15 @@ let frameCount = 0, lastTime = 0, fps = 0;
 const canvas = document.getElementById('intro-canvas');
 init();
 document.addEventListener('DOMContentLoaded', () => {
-    const themeSwitch = document.getElementById('theme-switch');
-    if (themeSwitch) {
-        themeSwitch.addEventListener('change', () => {
-            updateAnimationForTheme(themeSwitch.checked);
-        });
-    }
+    // Listen for theme change events from main.js instead of directly attaching to the switch
+    document.addEventListener('themeChanged', (event) => {
+        updateAnimationForTheme(event.detail.isLightTheme);
+    });
+    
+    // Check initial theme
+    const body = document.body;
+    const isLightTheme = body.classList.contains('light-theme');
+    updateAnimationForTheme(isLightTheme);
 });
 function updateAnimationForTheme(isLightTheme) {
     if (!scene) return;

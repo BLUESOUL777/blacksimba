@@ -416,6 +416,13 @@ window.addEventListener('popstate', (e) => {
 // Theme toggle functionality
 function setupThemeToggle() {
     const themeSwitch = document.getElementById('theme-switch');
+    
+    // Check if theme switch exists before proceeding
+    if (!themeSwitch) {
+        console.error('Theme switch element not found');
+        return;
+    }
+    
     const body = document.body;
     
     // Apply saved theme preference
@@ -424,6 +431,8 @@ function setupThemeToggle() {
         body.classList.add('light-theme');
         themeSwitch.checked = true;
         updateThemeColors(true);
+        // Dispatch theme event for other scripts
+        document.dispatchEvent(new CustomEvent('themeChanged', { detail: { isLightTheme: true } }));
     }
     
     // Toggle theme when switch is clicked
@@ -436,6 +445,9 @@ function setupThemeToggle() {
             localStorage.setItem('theme', 'dark');
         }
         updateThemeColors(this.checked);
+        
+        // Dispatch custom event for other scripts to listen to
+        document.dispatchEvent(new CustomEvent('themeChanged', { detail: { isLightTheme: this.checked } }));
     });
 }
 
