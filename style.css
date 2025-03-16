@@ -667,20 +667,26 @@ nav ul.active li a {
 /* Store section styles */
 .store-options {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 30px;
-    margin: 50px 0;
+    margin: 0 auto;
+    max-width: 1200px;
+    padding: 20px;
 }
 
 .store-card {
-    background: var(--card-bg);
-    border-radius: 10px;
-    padding: 30px;
-    text-align: center;
-    box-shadow: var(--card-shadow);
-    transition: transform 0.3s ease;
     position: relative;
+    background: var(--card-bg);
+    padding: 30px 20px;
+    border-radius: 15px;
+    text-align: center;
+    transition: var(--transition-medium);
     border: 1px solid var(--border-color);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .store-card:hover {
@@ -739,14 +745,19 @@ nav ul.active li a {
 }
 
 .shipping-info {
+    margin-top: 40px;
     text-align: center;
-    margin-top: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
 }
 
 .shipping-info p {
-    display: inline-block;
     margin: 0 15px;
-    color: var(--text-dimmed);
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 .shipping-info i {
@@ -1037,17 +1048,40 @@ footer::before {
 }
 
 /* Media Queries */
-@media (max-width: 1200px) {
-    .brand-name {
-        font-size: 4rem;
+@media (max-width: 1400px) {
+    .container {
+        max-width: 1140px;
     }
-    
-    #hero h1 {
+
+    .store-options {
+        gap: 25px;
+        padding: 15px;
+    }
+
+    .footer-content {
+        gap: 40px;
+    }
+}
+
+@media (max-width: 1200px) {
+    .container {
+        max-width: 960px;
+    }
+
+    .brand-name {
         font-size: 3.5rem;
     }
     
+    #hero h1 {
+        font-size: 3rem;
+    }
+    
     .section {
-        padding: 80px 0;
+        padding: 70px 0;
+    }
+
+    nav ul {
+        gap: 20px;
     }
     
     .about-content,
@@ -1062,32 +1096,87 @@ footer::before {
         max-width: 600px;
         margin: 0 auto;
     }
+
+    .store-options {
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        padding: 15px;
+        gap: 20px;
+    }
+
+    .footer-links {
+        gap: 20px;
+    }
+}
+
+@media (max-width: 992px) {
+    .container {
+        max-width: 720px;
+    }
+
+    header {
+        padding: 15px 30px;
+    }
+
+    .store-card {
+        padding: 25px 15px;
+    }
+
+    .store-card i {
+        font-size: 2.5rem;
+    }
+
+    .store-card h3 {
+        font-size: 1.3rem;
+    }
+
+    .store-card p {
+        font-size: 1.3rem;
+    }
+
+    .footer-content {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        text-align: center;
+    }
+
+    .footer-logo {
+        margin-bottom: 20px;
+    }
+
+    .footer-links {
+        grid-template-columns: repeat(3, 1fr);
+    }
 }
 
 @media (max-width: 768px) {
+    .container {
+        max-width: 540px;
+        padding: 0 15px;
+    }
+    
     .intro-overlay {
-        padding: 30px;
+        padding: 25px;
     }
     
     .brand-name {
-        font-size: 3rem;
+        font-size: 2.8rem;
     }
     
     .tagline {
-        font-size: 1rem;
+        font-size: 0.9rem;
     }
     
-    .enter-btn {
-        padding: 12px 30px;
-        font-size: 1rem;
+    #hero {
+        padding: 0 20px;
     }
-    
+
     #hero h1 {
-        font-size: 2.5rem;
+        font-size: 2.2rem;
     }
     
     .section-title {
-        font-size: 2rem;
+        font-size: 1.8rem;
+        margin-bottom: 25px;
     }
     
     nav ul {
@@ -1099,61 +1188,80 @@ footer::before {
     }
     
     header {
-        padding: 15px 20px;
+        padding: 12px 20px;
+    }
+
+    .logo {
+        font-size: 1.3rem;
     }
     
     .cta-buttons {
         flex-direction: column;
         gap: 15px;
+        align-items: stretch;
     }
     
-    .product-grid {
-        grid-template-columns: 1fr;
-        max-width: 400px;
-        margin: 30px auto 0;
+    .store-options {
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 15px;
+        padding: 10px;
     }
-    
-    .contact-info {
-        grid-template-columns: 1fr;
+
+    .store-card {
+        padding: 20px 15px;
     }
-    
-    .footer-content {
-        grid-template-columns: 1fr;
-        gap: 30px;
+
+    .store-card.featured {
+        transform: scale(1.02);
     }
-    
+
+    .store-card h3 {
+        font-size: 1.2rem;
+        margin-bottom: 8px;
+    }
+
+    .store-card p {
+        font-size: 1.1rem;
+        margin-bottom: 15px;
+    }
+
+    .shipping-info {
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 30px;
+    }
+
     .footer-links {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 25px;
     }
-    
+
+    .social-links {
+        justify-content: center;
+        margin-top: 25px;
+    }
+
     .theme-toggle {
-        position: absolute;
-        top: 15px;
-        right: 70px;
-        margin-right: 0;
+        right: 60px;
     }
-    
-    nav ul.active .theme-toggle {
-        position: fixed;
-        top: 15px;
-        right: 70px;
-        z-index: 1001;
+
+    .cart-icon {
+        right: 110px;
     }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 576px) {
+    .container {
+        padding: 0 12px;
+    }
+
     .brand-name {
         font-size: 2rem;
     }
     
     .tagline {
         font-size: 0.8rem;
-        letter-spacing: 3px;
-    }
-    
-    .enter-btn {
-        padding: 10px 25px;
-        font-size: 0.9rem;
+        letter-spacing: 2px;
     }
     
     #hero h1 {
@@ -1161,33 +1269,161 @@ footer::before {
     }
     
     .hero-description {
-        font-size: 1rem;
+        font-size: 0.9rem;
     }
     
     .section-title {
-        font-size: 1.8rem;
+        font-size: 1.6rem;
+        margin-bottom: 20px;
     }
     
     .logo {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
     }
     
     .store-options {
         grid-template-columns: 1fr;
         max-width: 300px;
-        margin: 30px auto;
+        margin: 0 auto;
+        padding: 10px;
     }
     
+    .store-card {
+        padding: 15px 12px;
+    }
+
+    .store-card i {
+        font-size: 2rem;
+        margin-bottom: 15px;
+    }
+    
+    .store-card.featured {
+        transform: scale(1);
+    }
+    
+    .featured-badge {
+        font-size: 0.7rem;
+        padding: 4px 8px;
+    }
+    
+    .btn {
+        padding: 8px 16px;
+        font-size: 0.85rem;
+    }
+
     .footer-links {
         grid-template-columns: 1fr;
+        text-align: center;
+        gap: 20px;
     }
-    
-    .loader {
-        width: 250px;
+
+    .footer-column h3 {
+        margin-bottom: 15px;
+        font-size: 1.1rem;
     }
-    
-    .loader-text {
-        font-size: 18px;
+
+    .footer-column ul li {
+        margin-bottom: 8px;
+    }
+
+    .social-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 360px) {
+    .brand-name {
+        font-size: 1.8rem;
+    }
+
+    #hero h1 {
+        font-size: 1.5rem;
+    }
+
+    .store-options {
+        max-width: 250px;
+    }
+
+    .store-card h3 {
+        font-size: 1.1rem;
+    }
+
+    .store-card p {
+        font-size: 1rem;
+    }
+
+    .theme-toggle {
+        right: 50px;
+    }
+
+    .cart-icon {
+        right: 95px;
+    }
+
+    .mobile-menu-toggle {
+        font-size: 1.2rem;
+    }
+}
+
+/* Enhanced Navigation Responsiveness */
+@media (max-width: 768px) {
+    nav ul.active {
+        padding-top: 80px;
+    }
+
+    nav ul.active li {
+        width: 100%;
+        text-align: center;
+    }
+
+    nav ul.active li a {
+        display: block;
+        padding: 15px 0;
+        font-size: 1.3rem;
+    }
+
+    nav ul.active li a::after {
+        display: none;
+    }
+}
+
+/* Enhanced Form Responsiveness */
+@media (max-width: 768px) {
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+
+    .form-group label {
+        font-size: 0.9rem;
+    }
+}
+
+/* Enhanced Modal Responsiveness */
+@media (max-width: 576px) {
+    .modal-content {
+        padding: 20px 15px;
+        width: 95%;
+    }
+
+    .close-modal {
+        top: 10px;
+        right: 10px;
+        font-size: 20px;
+    }
+
+    .modal h2 {
+        font-size: 1.3rem;
+        margin-bottom: 12px;
+    }
+
+    .modal p {
+        font-size: 0.9rem;
+        margin-bottom: 15px;
     }
 }
 
