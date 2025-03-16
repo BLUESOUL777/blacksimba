@@ -19,99 +19,94 @@
                 font-size: 18px;
                 padding: 30px;
             }
-            
         }
         
         @media (max-width: 1440px) {
-           
             #contact {
                 margin: auto;
                 transform: translateX(-13%);
             }
-        
         }
-        
-       
-       
         
         @media (max-width: 768px) {
             .store-options {
                 flex-direction: column;
                 align-items: center;
+                transform: none;
+                width: 100%;
+                padding: 0;
             }
-        
+            
+            #store {
+                width: 100% !important;
+                margin: 80px auto !important;
+                transform: none !important;
+                padding: 0;
+            }
+
+            .store-card {
+                width: 90%;
+                max-width: none;
+            }
+
+            .container {
+                padding: 0;
+                margin: 0 auto;
+                width: 100%;
+            }
+
+            .shipping-info {
+                width: 90%;
+                margin: 30px auto;
+                padding: 0;
+            }
             
             #contact {
                 margin: 0 auto;
                 transform: translateX(-15%);
-            }
-        }
-        @media (min-width: 1280px) and (max-width: 1536px) {
-       
-    
-        #store {
-            width: 70%;
-            margin: 0 auto;
-            text-align: center;
-            transform: translateX(10%) !important;
-        }
-    }
-    @media (max-width: 768px) {
-            .store-options {
-                flex-direction: column;
-                align-items: center;
-            }
-        
-            
-            #contact {
-                margin: 0 auto;
-                transform: translateX(-15%);
-            }
-        }
-        @media (max-width: 400px) {
-            .store-options {
-                flex-direction: column;
-                align-items: center;
-            }
-        
-            
-            #contact {
-                margin: 0 auto;
-               
-            }
-            .store-options{
-                flex-direction: column;
-                align-items: center;
-                transform: translateX(-60%);
             }
         }
 
-        @media (min-width: 400px) and (max-width: 760px) {
+        @media (max-width: 480px) {
+            #store {
+                margin: 60px auto !important;
+            }
+
             .store-options {
-                flex-direction: column;
-                align-items: center;
+                padding: 0 15px;
             }
-        
-            
-            #contact {
-                margin: 0 auto;
-               
+
+            .store-card {
+                width: 100%;
+                margin: 10px 0;
             }
-            .store-options{
-                flex-direction: column;
-                align-items: center;
-                transform: translateX(-10%);
+
+            .section-title {
+                padding: 0 15px;
+                margin-bottom: 30px;
+            }
+
+            .shipping-info {
+                width: 100%;
+                padding: 0 15px;
             }
         }
         
-        
-        </style>
+        @media (min-width: 1280px) and (max-width: 1536px) {
+            #store {
+                width: 70%;
+                margin: 0 auto;
+                text-align: center;
+                transform: translateX(10%) !important;
+            }
+        }
+    </style>
 </head>
 <body>
     <header>
     <nav>
         <div onclick="window.location.href='./index.html'" style="cursor: pointer;" class="logo">BLACK SIMBA</div>
-        <ul>
+        <ul style="font-size: 18px;">
             <li><a href="./product.html" class="nav-link" data-page="products">PRODUCTS</a></li>
             <li><a href="./about.html" class="nav-link" data-page="about">ABOUT</a></li>
             <li><a href="./energy.html" class="nav-link" data-page="energy">ENERGY</a></li>
@@ -137,13 +132,13 @@
 </header>
 
 <section id="store" style="margin: 100px;">
-    <div class="container">
+    <div class="container" style="margin: 100px auto;">
         <h2 class="section-title">SHOP BLACK SIMBA</h2>
         <div class="store-options">
             <div class="store-card">
                 <i class="fas fa-box"></i>
                 <h3>SINGLE CAN</h3>
-                <p>  &#8377;80 </p>
+                <p>&#8377;80</p>
                 <a href="#" class="btn small-btn">ADD TO CART</a>
             </div>
             <div class="store-card featured">

@@ -687,6 +687,9 @@ nav ul.active li a {
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
+    max-width: 400px;
+    margin: 0 auto;
+    width: 100%;
 }
 
 .store-card:hover {
@@ -751,6 +754,7 @@ nav ul.active li a {
     flex-wrap: wrap;
     justify-content: center;
     gap: 20px;
+    padding: 0 20px;
 }
 
 .shipping-info p {
@@ -1146,6 +1150,21 @@ footer::before {
     .footer-links {
         grid-template-columns: repeat(3, 1fr);
     }
+
+    .contact-content {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+
+    .contact-info {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .contact-form {
+        max-width: 800px;
+        margin: 0 auto;
+    }
 }
 
 @media (max-width: 768px) {
@@ -1202,17 +1221,22 @@ footer::before {
     }
     
     .store-options {
-        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-        gap: 15px;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 20px;
+        max-width: 400px;
+        margin: 0 auto;
         padding: 10px;
     }
 
     .store-card {
-        padding: 20px 15px;
+        width: 100%;
+        margin: 0 auto;
     }
 
     .store-card.featured {
-        transform: scale(1.02);
+        order: -1;
+        transform: none;
     }
 
     .store-card h3 {
@@ -1229,6 +1253,12 @@ footer::before {
         flex-direction: column;
         gap: 12px;
         margin-top: 30px;
+        padding: 0 15px;
+    }
+
+    .shipping-info p {
+        margin: 0;
+        justify-content: center;
     }
 
     .footer-links {
@@ -1247,6 +1277,44 @@ footer::before {
 
     .cart-icon {
         right: 110px;
+    }
+
+    .contact-info {
+        grid-template-columns: 1fr;
+        max-width: 400px;
+        gap: 20px;
+    }
+
+    .contact-method {
+        padding: 25px;
+        margin: 0 auto;
+        width: 100%;
+    }
+
+    .contact-method i {
+        font-size: 2.2rem;
+    }
+
+    .contact-method h3 {
+        font-size: 1.3rem;
+    }
+
+    .contact-method p {
+        font-size: 1.1rem;
+    }
+
+    .social-links {
+        grid-column: span 1;
+        margin-top: 15px;
+    }
+
+    .contact-form {
+        padding: 25px;
+        max-width: 400px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
     }
 }
 
@@ -1818,5 +1886,55 @@ footer::before {
 .limit-content{
   max-height: 1500px;
   overflow: hidden;
+}
+
+@media (max-width: 480px) {
+    .contact-info {
+        max-width: 100%;
+        padding: 0 15px;
+    }
+
+    .contact-method {
+        padding: 20px;
+        max-width: 100%;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .contact-form {
+        padding: 20px;
+        margin: 0 15px;
+        width: calc(100% - 30px);
+        box-sizing: border-box;
+    }
+
+    .social-links {
+        gap: 15px;
+    }
+
+    .social-icon {
+        width: 45px;
+        height: 45px;
+        font-size: 1.3rem;
+    }
+
+    #contact .container {
+        padding: 0;
+        margin: 80px auto;
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .section-title {
+        padding: 0 15px;
+        word-wrap: break-word;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        width: 100%;
+        box-sizing: border-box;
+    }
 }
 
