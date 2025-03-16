@@ -592,5 +592,5 @@ function showProductModal(product) {
     setTimeout(() => modal.classList.add('show'), 100);
 }
 
-export { updateProgressBar, onLoadingComplete };
+export { updateProgressBar, onLoadingComplete, showProductModal };
 

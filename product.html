@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Products</title>
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦁</text></svg>">
     <script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
@@ -47,7 +47,7 @@
                 </div>
                 <h3>ORIGINAL ROAR</h3>
                 <p>Our signature blend with a perfect balance of energy and focus.</p>
-                <a href="#" class="btn small-btn">DETAILS</a>
+                <a href="#" class="btn small-btn product-details-btn" data-product="original">DETAILS</a>
             </div>
             <div class="product-card">
                 <div class="product-image">
@@ -55,7 +55,7 @@
                 </div>
                 <h3>INTENSE FURY</h3>
                 <p>Maximum energy boost with enhanced caffeine and taurine.</p>
-                <a href="#" class="btn small-btn">DETAILS</a>
+                <a href="#" class="btn small-btn product-details-btn" data-product="intense">DETAILS</a>
             </div>
             <div class="product-card">
                 <div class="product-image">
@@ -63,7 +63,7 @@
                 </div>
                 <h3>ZERO SUGAR</h3>
                 <p>All the power, none of the sugar. Pure energy without compromise.</p>
-                <a href="#" class="btn small-btn">DETAILS</a>
+                <a href="#" class="btn small-btn product-details-btn" data-product="zero">DETAILS</a>
             </div>
         </div>
     </div>
@@ -111,6 +111,24 @@
             </div>
         </div>
     </footer>
+
+    <script type="module">
+        window.addEventListener('load', async () => {
+            const { showProductModal } = await import('./main.js');
+            
+            const productButtons = document.querySelectorAll('.product-card .btn');
+            productButtons.forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const card = e.target.closest('.product-card');
+                    const product = {
+                        name: card.querySelector('h3').textContent,
+                        description: card.querySelector('p').textContent
+                    };
+                    showProductModal(product);
+                });
+            });
+        });
+    </script>
     <script type="module" src="theme.js"></script>
     <script src="nav.js"></script>
 </body>
