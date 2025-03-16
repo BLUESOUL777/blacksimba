@@ -1771,6 +1771,7 @@ footer::before {
     align-items: center;
     font-size: 0.8rem;
     font-weight: bold;
+    margin-right: 10px;
 }
 
 /* Responsive Adjustments */
@@ -1798,6 +1799,8 @@ footer::before {
 .cart-icon i {
     font-size: 1.2rem;
     color: var(--text-color);
+    margin: 5px;
+    margin-right: 16px;
 }
 
 .cart-icon:hover i {

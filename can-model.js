@@ -3,22 +3,16 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-// Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger);
 
-// Scene variables
 let scene, camera, renderer, canModel, controls;
 let mouseX = 0, mouseY = 0;
 
-// Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    // Create container if it doesn't exist
     if (!document.getElementById('can-container')) {
         const container = document.createElement('div');
         container.id = 'can-container';
         container.className = 'can-model-container';
-        
-        // Insert after the hero section
         const heroSection = document.getElementById('hero');
         if (heroSection) {
             heroSection.appendChild(container);
@@ -27,30 +21,24 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
-    // Initialize 3D scene
     init();
-    
-    // Add theme change listener - use custom event from main.js
     document.addEventListener('themeChanged', (event) => {
         updateSceneForTheme(event.detail.isLightTheme);
     });
     
-    // Check initial theme
     const body = document.body;
     const isLightTheme = body.classList.contains('light-theme');
     updateSceneForTheme(isLightTheme);
 });
 
-// Initialize the scene
 function init() {
     const canContainer = document.getElementById('can-container');
-    
-    // Create scene with theme-aware background
+
     scene = new THREE.Scene();
     const isLightTheme = document.body.classList.contains('light-theme');
     scene.background = new THREE.Color(isLightTheme ? 0xf5f5f5 : 0x0F0E0C);
 
-    // Create camera
+
     camera = new THREE.PerspectiveCamera(45, canContainer.clientWidth / canContainer.clientHeight, 0.1, 1000);
     camera.position.set(0, 0, 5);
 
