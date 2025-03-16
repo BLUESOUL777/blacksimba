@@ -1816,3 +1816,35 @@ footer::before {
   max-height: 1500px;
   overflow: hidden;
 }
+
+body {
+    font-size: 16px;
+    padding: 10px;
+}
+
+@media (min-width: 768px) {
+    body {
+        font-size: 18px;
+        padding: 20px;
+    }
+}
+
+@media (min-width: 1024px) {
+    body {
+        font-size: 20px;
+        padding: 30px;
+    }
+}
+
+@media (min-width: 1440px) {
+    body {
+        font-size: 22px;
+        padding: 40px;
+    }
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
