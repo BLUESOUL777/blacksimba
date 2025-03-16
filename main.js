@@ -199,13 +199,11 @@ function enterSite() {
         animateMainContent();
         
         // Update URL without refreshing the page
-        history.pushState({page: 'main'}, 'Black Simba Energy', '#main');
     }, 1000);
 }
 
 // Handle navigation
 function handleNavigation(e) {
-    e.preventDefault();
     
     // Get the target section ID
     const targetId = e.currentTarget.getAttribute('href').substring(1);
@@ -220,7 +218,6 @@ function handleNavigation(e) {
     }
     
     // Update URL
-    history.pushState({page: targetId}, '', `#${targetId}`);
 }
 
 // Set active section
@@ -595,5 +592,5 @@ function showProductModal(product) {
     setTimeout(() => modal.classList.add('show'), 100);
 }
 
-// Export functions that might be needed by other scripts
 export { updateProgressBar, onLoadingComplete };
+
